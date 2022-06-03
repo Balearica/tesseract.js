@@ -7,7 +7,7 @@ declare namespace Tesseract {
 
   interface Scheduler {
     addWorker(worker: Worker): string
-    addJob(action: string, ...args: any[]): Promise<ConfigResult | RecognizeResult | DetectResult>
+    addJob(action: string, ...args: any[]): Promise<ConfigResult | RecognizeResult | DetectResult | ThresholdResult>
     terminate(): Promise<any>
     getQueueLen(): number
     getNumWorkers(): number
@@ -23,6 +23,7 @@ declare namespace Tesseract {
     initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
+    threshold(image: ImageLike, options?: Partial<ThresholdOptions>,jobId?: string): Promise<ThresholdResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
   }
@@ -43,7 +44,9 @@ declare namespace Tesseract {
     tessedit_ocr_engine_mode: OEM
     tessedit_pageseg_mode: PSM
     tessedit_char_whitelist: string
+    tessedit_char_blacklist: string
     preserve_interword_spaces: string
+    hocr_char_boxes: string
     user_defined_dpi: string
     tessjs_create_hocr: string
     tessjs_create_tsv: string
@@ -54,6 +57,9 @@ declare namespace Tesseract {
   interface RecognizeOptions {
     rectangle: Rectangle
   }
+  interface ThresholdOptions {
+    angle: number
+  }
   interface ConfigResult {
     jobId: string
     data: any
@@ -61,6 +67,10 @@ declare namespace Tesseract {
   interface RecognizeResult {
     jobId: string
     data: Page
+  }
+  interface ThresholdResult {
+    jobId: string
+    data: string
   }
   interface DetectResult {
     jobId: string
